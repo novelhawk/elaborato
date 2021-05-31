@@ -37,4 +37,6 @@ Le API si occuperanno di interfacciarsi con il Database. Ho scelto di utilizzare
 
 Per permettere ai clienti di prenotare spiaggie private \`e necessario implementare un servizio di e-commerce. Analizzando le varie possibilit\`a il servizio pi\`u adatto mi \`e sembrato essere \emph{PayPal Checkout}, le API sono semplici da integrare nel sito web e permette di pagare sia con PayPal che con Carte di Credito. Anche \emph{I-Beach} utilizza questo servizio.
 
-%TODO: Generazione codice QR
+\subsection{Generazione codice QR}
+
+Ogni prenotazione ha un codice QR associato tuttavia non \`e possibile utilizzare il campo ``reservations.id'' del database (Sezione~\ref{sec:modelloer}) per generare il codice QR siccome \`e un campo che incrementa di uno ad ogni riga della tabella, rendendo quindi prevedibile l'identificativo delle prenotazioni successive a quella di un cliente. Se il codice QR fosse generato esclusivamente utilizzando il campo ID, chiunque abbia esperienza con attacchi informatici sarebbe in grado di utilizzare le prenotazioni di altri come se fosse sue. Per rendere univoco e imprevedibile il codice QR ho deciso di concatenare l'identificativo dell'utente che ha prenotato la spiaggia al numero della prenotazione, in questo modo sarebbe necessario predirre anche chi ha prenotato la spiaggia oltre al numero della prenotazione.

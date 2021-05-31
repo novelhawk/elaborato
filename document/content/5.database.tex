@@ -1,7 +1,7 @@
 \section{Database}
 
 \subsection{Modello E/R}%
-\label{sec:modello_e_r}
+\label{sec:modelloer}
 
 \includegraphics[width=\linewidth]{modelloer.png}
 
@@ -14,3 +14,5 @@ Le tabelle reservation\_days, reservation\_minutes e reservation\_payment sono t
 \end{itemize}
 
 Le informazioni per il pagamento degli Stabilimenti Partner non sono incluse all'interno della tabella partners siccome sono dati sensibili. I dati sensibili insieme al \emph{salt} delle password devono essere salvati in un database separato per permettere un livello di sicurezza superiore.
+
+Gli ID di tutte le tabelle sono autogenerate con le sequenze di Postgres. Quando vengono definite le tabelle viene utilizzato il tipo ``serial'' e le sue varianti, ``smallserial'' e ``bigserial'' che corrispondono rispettivamente ai tipi ``int'', ``smallint'' e ``bigint'' ma insieme ad essi vengono creati degli oggetti speciali chiamati sequenze. Le sequenze permettono di tenere traccia dell'ultimo ID inserito e scelgono in automatico il prossimo quando viene inserito un nuovo record all'interno della tabella.
