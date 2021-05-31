@@ -9,7 +9,7 @@
 \usepackage{graphicx} 
 \usepackage{pdflscape} 
 \usepackage{booktabs}
-\usepackage{natbib}
+\usepackage[square,numbers]{natbib}
 \usepackage{environ}
 \usepackage{caption}
 \usepackage{tikz}
@@ -36,8 +36,6 @@
 
 \begin{document}
 
-\nocite{*}
-
 \subfile{content/0.title}
 
 \tableofcontents
@@ -52,6 +50,8 @@
 \subfile{content/6.database-modello-logico}
 \subfile{content/7.sicurezza-informatica}
 \subfile{content/8.rete}
+
+\nocite{*}
 
 \bibliography{bibliography}
 

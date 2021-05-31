@@ -1,4 +1,6 @@
-\section{Modello E/R}%
+\section{Database}
+
+\subsection{Modello E/R}%
 \label{sec:modello_e_r}
 
 \includegraphics[width=\linewidth]{modelloer.png}
@@ -10,3 +12,5 @@ Le tabelle reservation\_days, reservation\_minutes e reservation\_payment sono t
     \item \textbf{reservation\_minutes}: Aggiunge informazioni sulla prenotazione se la prenotazione \`e della durata di alcuni minuti o ore.
     \item \textbf{reservation\_payment}: Aggiunge informazioni sulla prenotazione di \allowbreak{ombrelloni}. Non \`e presente se viene prenotata una spiaggia libera. Contine informazioni sulla transazione PayPal.
 \end{itemize}
+
+Le informazioni per il pagamento degli Stabilimenti Partner non sono incluse all'interno della tabella partners siccome sono dati sensibili. I dati sensibili insieme al \emph{salt} delle password devono essere salvati in un database separato per permettere un livello di sicurezza superiore.
