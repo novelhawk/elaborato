@@ -1,0 +1,371 @@
+\section{Modello Logico}%
+\label{sec:modello_logico}
+
+Di seguito sono incluse tutte le tabelle del database, il tipo di dato e una piccola descrizione.
+
+Ogni tabella avr\`a il nome della Primary Key sottolineata e la lista delle condizioni immediatamente sotto la lista delle colonne della tabella. I tipi seguiti da un punto di domanda segnalano la possibilit\`a di essere nulli. Il prefisso \emph{tz} dei tipi riguardati il tempo (\emph{timetz} e \emph{timestamptz}) includono informazioni sul fuso orario all'interno del tipo.
+
+\begin{center}
+    \subsection*{Tabella \textnormal{states}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco\\
+        name & text & Nome dello Stato\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        unique\_name & UNIQUE (name)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{cities}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        state\_id & int & ID dello Stato\\
+        name & text & Nome della citt\`a\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_state\_id & FOREIGN KEY (state\_id) REFERENCES states\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{beaches}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        name & text & Nome della spiaggia\\
+        city\_id & int & ID della citt\`a\\
+        capacity & int & Capacit\`a massima della spiaggia, presente a causa del COVID\\
+        free & bool & Indica se la spiaggia \`e libera\\
+        day\_price & decimal & Prezzo prenotazione al giorno, lo 0 indica che non \`e possibile prenotare giorni interi. Se la spiaggia \`e libera viene ignorato.\\
+        hour\_price & decimal & Prezzo prenotazione all'ora, lo 0 indica che non \`e possibile prenotare singole ore. Se la spiaggia \`e libera viene ignorato.\\
+        month\_discount & float & Sconto per prenotazioni di almeno di un mese. Se la spiaggia \`e libera viene ignorato.\\
+        year\_discount & float & Sconto per prenotazioni di almeno un anno. Se la spiaggia \`e libera viene ignorato.\\
+        latitude & decimal & Latitudine della spiaggia (utilizzata da Google Maps)\\
+        longitude & decimal & Longitudine della spiaggia (utilizzata da Google Maps)\\
+        owner\_earn\_rate & float & Percentuale del guardagno dovuto al proprietario della spiaggia\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_city\_id & FOREIGN KEY (city\_id) REFERENCES cities\\
+        check\_valid\_percentages & CHECK (month\_discount >= 0 AND\par{}month\_discount <= 1 AND\par{}year\_discount >= 0 AND\par{}year\_discount <= 1)\\
+        check\_capacity\_over\_0 & CHECK (capacity > 0)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{tags}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & smallserial & ID Univoco \\
+        name & text & Nome del Tag\\
+        icon & text? & Icona opzionale del Tag\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        unique\_name & UNIQUE (name)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{beach\_tags}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        beach\_id & int & ID della Spiaggia\\
+        tag\_id & smallint & ID del Tag\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_beach\_id & FOREIGN KEY (beach\_id) REFERENCES beaches\\
+        fk\_tag\_id & FOREIGN KEY (tag\_id) REFERENCES tags\\
+        unique\_tag & UNIQUE (beach\_id, tag\_id)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{beach\_umbrella}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        beach\_id & int & ID della Spiaggia\\
+        name & text & Identificativo alfanumerico dell'ombrellone\\
+        latitude & decimal? & Latitudine opzionale dell'ombrellone\\
+        longitude & decimal? & Longitudine opzionale dell'ombrellone\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_beach\_id & FOREIGN KEY (beach\_id) REFERENCES beaches\\
+        unique\_umbrella & UNIQUE (beach\_id, name)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{partners}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        organization & text & Nome dell'organizzazione\\
+        owner\_name & text & Nome del proprietario\\
+        owner\_surname & text & Cognome del proprietario\\
+        iban & text & IBAN per pagamento delle prenotazioni\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{partner\_beaches}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        partner\_id & int & ID del Partner\\
+        beach\_id & int & ID della Spiaggia\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_partner\_id & FOREIGN KEY (partner\_id) REFERENCES partners\\
+        fk\_beach\_id & FOREIGN KEY (beach\_id) REFERENCES beaches\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{users}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        email & text & Indirizzo email del cliente\\
+        hashed\_password & bytea & Password dopo aver eseguito bcrypt\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        unique\_email & UNIQUE (email)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{reservations}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        user\_id & int & ID dell'Utente\\
+        beach\_id & int & ID della Spiaggia\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_user\_id & FOREIGN KEY (user\_id) REFERENCES users\\
+        fk\_beach\_id & FOREIGN KEY (beach\_id) REFERENCES beaches\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{reservation\_days}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        reservation\_id & int & ID della prenotazione\\
+        start\_date & date & Data inizio della prenotazione\\
+        days & int & Numero di giorni della prenotazione\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_reservation\_id & FOREIGN KEY (reservation\_id) REFERENCES reservations\\
+        check\_days\_over\_0 & CHECK (days > 0)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{reservation\_minutes}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        reservation\_id & int & ID della prenotazione\\
+        start\_datetime & date & Data e ora inizio della prenotazione\\
+        minutes & int & Numero di minuti prenotati\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_reservation\_id & FOREIGN KEY (reservation\_id) REFERENCES reservations\\
+        check\_minutes\_over\_0 & CHECK (minutes > 0)\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}
+
+\begin{center}
+    \subsection*{Tabella \textnormal{reservation\_payment}}
+    
+    \begin{tabularx}{\textwidth}{l c X}
+        \toprule
+        \textbf{Dato} & \textbf{Tipo} & \textbf{Descrizione}\\
+        % ===
+        \underline{id} & serial & ID Univoco \\
+        reservation\_id & int & ID della prenotazione\\
+        umbrella\_id & date & ID dell'Ombrellone prenotato\\
+        price & int & Prezzo pagato\\
+        payment\_id & text & ID PayPal del pagamento\\
+        payer\_id & text & ID PayPal di chi ha pagato\\
+        paypal\_email & text & Email PayPal di chi ha pagato\\
+        % ===
+        \midrule
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{l X}
+        \multicolumn{2}{c}{\textbf{Constraints}}\\
+        \midrule
+        \textbf{Nome} & \textbf{Condizione}\\
+        % ====
+        pk\_id & PRIMARY KEY (id)\\
+        fk\_reservation\_id & FOREIGN KEY (reservation\_id) REFERENCES reservations\\
+        fk\_umbrella\_id & FOREIGN KEY (umbrella\_id) REFERENCES umbrellas\\
+        % ===
+        \bottomrule
+    \end{tabularx}
+    \bigskip
+\end{center}

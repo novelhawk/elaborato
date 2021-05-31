@@ -1,0 +1,51 @@
+openapi: 3.0.1
+info:
+  title: Ombrelloni.io
+  description: Beach booking service
+  termsOfService: 'http://ombrelloni.io/terms/'
+  contact:
+    email: info@ombrelloni.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+servers:
+  - url: 'https://api.ombrelloni.io/v1'
+tags:
+  - name: public
+    description: Public domain data
+  - name: book
+    description: Payment and booking endpoints
+  - name: user
+    description: User management endpoints
+  - name: partner
+    description: Work with us
+    externalDocs:
+      url: https://ombrelloni.io/partner
+      description: Learn more
+paths: {}
+info:
+  title: Ombrelloni.io
+  description: Beach booking service
+  termsOfService: 'http://ombrelloni.io/terms/'
+  contact:
+    email: info@ombrelloni.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+servers:
+  - url: 'https://api.ombrelloni.io/v1'
+tags:
+  - name: public
+    description: Public domain data
+  - name: book
+    description: Payment and booking endpoints
+  - name: user
+    description: User management endpoints
+  - name: partner
+    description: Work with us
+    externalDocs:
+      url: https://ombrelloni.io/partner
+      description: Learn more
+paths: {}

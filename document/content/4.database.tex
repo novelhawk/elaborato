@@ -1,0 +1,12 @@
+\section{Modello E/R}%
+\label{sec:modello_e_r}
+
+\includegraphics[width=\linewidth]{modelloer.png}
+
+Le tabelle reservation\_days, reservation\_minutes e reservation\_payment sono tabelle in relazione uno ad uno con la tabella reservations. Queste aggiungono informazioni situazionali alla prenotazione.
+
+\begin{itemize}
+    \item \textbf{reservation\_days}: Aggiunge informazioni sulla prenotazione se la prenotazione \`e della durata di giornate intere. (una o pi\`u)
+    \item \textbf{reservation\_minutes}: Aggiunge informazioni sulla prenotazione se la prenotazione \`e della durata di alcuni minuti o ore.
+    \item \textbf{reservation\_payment}: Aggiunge informazioni sulla prenotazione di \allowbreak{ombrelloni}. Non \`e presente se viene prenotata una spiaggia libera. Contine informazioni sulla transazione PayPal.
+\end{itemize}

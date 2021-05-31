@@ -1,0 +1,47 @@
+\section{Analisi dei requisiti}
+Per prima cosa ho deciso di analizzare la consegna e dividere il lavoro in pi\`u attivit\`a per organizzare meglio il tempo e per renderle divisibili tra pi\`u persone in una situazione reale.
+
+Ci viene chiesto di realizzare un \emph{servizio} per la prenotazione del posto in spiaggia che permetta la comunicazione sicura dei dati e il pagamento remoto dove richiesto.
+
+% Database
+% Hosting: Remoto
+% Servizio: Website + API
+% Trattamento di dati: user or uid
+% Protocollo: HTTPS
+% ECommerce
+% Protezione: Cloudflare
+
+Ho deciso di implementare il servizio sotto forma di sito web e web API\@. Il vantaggio principale di questa scelta \`e la flessibilit\`a all'integrazione con applicazioni desktop e mobile. Confronto i vantaggi e gli svantaggi e spiego il funzionamento delle varie alternative a questa scelta nella sottosezione~\ref{sub:tipologie_di_servizio}.
+
+Le informazioni necessarie al servizio devono essere salvate su un database, ho deciso di utilizzare il DBMS PostgreSQL per le funzionalit\`a aggiuntive che offre come il tipo \emph{text} per contenere stringhe di dimensione variabile. Il database deve essere installato in prossimit\`a del server API per ridurre il ritardo di comunicazione. Un secondo database \`e richiesto per salvare il \emph{salt} utilizzato per crittografare le password degli utenti.
+
+Il server web pu\`o essere ospitato in separata sede o nel cloud siccome configurer\`o il server web per servire contenuto statico e utilizzer\`o Javascript client-side per ottenere le informazioni richieste dal sito web.
+
+Il server API pu\`o essere ospitato su cloud o anche in azienda tuttavia numerose misure di sicurezza sono necessarie alla protezione dei dati e alla continuit\`a del servizio quindi potrebbe essere negli interessi dell'azienda delegare queste responsabilit\`a a un'azienda specializzata.
+
+Considerato l'ambito del progetto consiglierei l'hosting su cloud siccome ridurrebbe considerevolmente i costi inziali e scala automaticamente con il numero di richieste. Molte aziende vogliono essere sotto controllo dei dati dei propri utenti e siccome l'hosting cloud delega questo controllo ad un'altra azienda preferiscono ospitare il server nella propria infrastruttura tuttavia garantire lo stesso livello di sicurezza delle aziende specializzate per una piccola impresa non \`e possibile a causa dell'elevata complessit\`a e dei costi non accessibili.
+
+Per quanto riguarda la sicurezza della trasmissione di dati \`e suffiente implementare il protocollo HTTPS nel server web, \`e quindi richiesto un certificato TLS/SSL che garantisca l'autenticit\`a e l'integrit\`a delle informazioni trasmesse. I certificati possono essere acquistati da enti certificatori (Certification Authority) ma un certificato semplice potrebbe essere gi\`a incluso con la registrazione del dominio o con l'hosting cloud. Per questo servizio ho scelto di utilizzare Cloudflare, i certificati SSL sono gratuiti ma \`e necessaria completa fiducia in Cloudflare siccome hanno accesso alle comunicazioni in chiaro (Sezione~\ref{sub:sicurezza_informatica}). 
+
+Sono necessarie delle considerazioni per quanto riguarda i dati personali, il servizio dovr\`a salvare l'email dei clienti e dovr\`a anche salvare informazioni riguardo il pagamento elettronico inoltre anche le informazioni per il pagamento delle spiaggie partner dovranno essere salvate. 
+Queste informazioni dovranno essere opportunamente documentate nel documento del trattamento dei dati personali e della privacy. 
+
+Ogni utente inoltre dovr\`a registrarsi con email e password ma per rispettare gli standard di sicurezza non \`e possibile salvare la password in chiaro nel database ma \`e necessario utilizzare un'algoritmo di hashing per derivare una stringa che identifichi la password corretta senza possibilit\`a di ricavare la password originale (One-Way function). Gli algoritmi di hashing non sono pi\`u abbastanza per proteggere una password, oggi \`e necessario concatenare una stringa casuale chiamata \emph{salt} alla password prima di usare l'algoritmo di hashing e l'output della funzione di hash deve essere ripetutamente passato alla funzione di hash per almeno 10000 volte. Questo algoritmo \`e stato implementato nella funzione di hash chiamata \emph{bcrypt}. Il salt dovr\`a essere salvato in un database separato da quello degli hash per garantire la sicurezza delle password.
+
+Un'altro requisito del servizio \`e la possibilit\`a di prenotare da remoto con pagamenti elettronici, ci sono numerose alternative per l'e-commerce, tra le pi\`u famose troviamo PayPal Checkout e Shopify.
+
+\subsection{Tipologie di servizio}%
+\label{sub:tipologie_di_servizio}
+
+Il servizio richiesto pu\`o essere implementato in diverse forme: un sito web, un'applicazione cellulare, un'applicazione desktop o un'API\@. Segue una breve descrizione di queste tipologie di servizio:
+
+\begin{itemize}
+    \item \textbf{Sito Web}: Pagina accessibile tramite un browser su ogni dispositivo. Facilmente integrabile sotto forma di applicazione desktop o mobile.
+    \item \textbf{Applicazione Mobile}: Applicazione per cellulari, ha il maggior numero di utenti grazie alla comodit\`a ed \`e pi\`u semplice fidelizzare i clienti. Esistono numerose tecniche per lo sviluppo di applicazioni per cellulari ma per un'applicazione di questo tipo \`e ideale utilizzare tecnologie cross-platform per permettere l'integrazione diretta in altre piattaforme.
+    \item \textbf{Applicazione Desktop}: Poco utilizzate e difficili da integrare in altre piattaforme. Tramite l'uso di \href{https://www.electronjs.org/}{Electron} \`e possibile integrare un sito web all'interno di un'applicazione desktop in pochi minuti.
+    \item \textbf{API}: Servizio accessibile solo tramite chiamate strutturate da altre applicazioni. Semplice integrazione in tutte le altre tipologie di applicazione ma richiede la progettazione di un'interfaccia separata. Utile per sviluppatori siccome semplifica l'integrazione del servizio in applicazioni di terze parti.
+\end{itemize}
+
+Ho deciso di progettare il servizio sotto forma di un sito web e API\@. Tutte le azioni e le informazioni saranno accessibili tramite le API, il sito web si occuper\`a solo di fornire un'interfaccia per la visualizzazione delle informazioni che saranno richieste da parte del client tramite richieste asincrone (AJAX). Questo approccio permette il caching integrale di tutte le pagine web permettendo di caricare le pagine web instantaneamente e di richiedere le informazioni successivamente. L'implementazione di API permette inoltre l'integrazione con applicazioni native senza dover riscrivere tutto il codice di gestione delle informazioni delle spiaggie, infatti sar\`a sufficiente richiedere le informazioni della API senza interrogare direttamente il database rendendo l'implementazione semplice e veloce.
+
+L'implementazione del sito web permette inoltre di utilizzare le tecnologie recenti di Progressive Web App, infatti \`e possibile salvare in cache l'intero sito web e ridurre i tempi di caricamento del sito web, inoltre \`e possibile il caricamento del sito quando il dispositivo non \`e collegato alla rete Internet ma ovviamente non sar\`a possibile utilizzare il servizio in se, sar\`a solo possibile notificare l'utente del problema di connessione. Le Progressive Web App (PWA) sono siti web che possono essere installati come applicazioni native, permettendo di ridurre i costi di sviluppo e sviluppando una sola applicazione per tutti i dispositivi sul mercato (su dispositivi Desktop il servizio sar\`a accessibile tramite browser o tramite semplice applicazione Electron, su dispositivi mobile tramite applicazione PWA)
