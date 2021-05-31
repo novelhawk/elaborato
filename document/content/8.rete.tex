@@ -52,6 +52,8 @@ L'ultima ACL si occupa di filtrare il traffico originato dalla rete Wi-Fi pubbli
 
 L'ordine di inserimento delle ACL \`e importante. La prima regola inserita \`e quella con valore maggiore, se guardiamo l'Access List~\ref{acl:3} ho prima permesso le richieste DHCP e poi ho bloccato tutte le richeste verso la rete privata. La prima regola diventa un'eccezione all'interno della seconda regola. Inoltre nel comando ``ip access-group <acl> [in/out]'' il parametro `in/out' \`e in riferimento al router. Quindi bisogna specificare `in' quando il traffico \`e in arrivo verso il Router e `out' viceversa.
 
+\setlength{\parskip}{0em}
+
 \section{Rete completa e Codice sorgente}
 
 Il file di Packet Tracer \`e disponibile per essere scaricato insieme al codice sorgente di questo documento nella repository di GitHub disponibile all'indirizzo \url{https://github.com/novelhawk/elaborato}.
