@@ -28,7 +28,8 @@
 
 \hypersetup{
     colorlinks,
-    linkcolor=LinkColor
+    linkcolor=LinkColor,
+    citecolor=CiteColor
 }
 
 \input{colors.tex}
@@ -38,7 +39,10 @@
 
 \subfile{content/0.title}
 
-\tableofcontents
+{
+    \hypersetup{linkcolor=IndexLinkColor}
+    \tableofcontents
+}
 \newpage
 
 \setlength{\parskip}{0.6em}
