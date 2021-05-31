@@ -10,9 +10,29 @@
 \usepackage{pdflscape} 
 \usepackage{booktabs}
 \usepackage{natbib}
+\usepackage{environ}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{xcolor}
 
 \graphicspath{{images}}
 \bibliographystyle{unsrtnat}
+
+\usetikzlibrary{shapes.misc, positioning}
+\usetikzlibrary{calc}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\DeclareCaptionType{commandblock}[Access List][]
+
+\hypersetup{
+    colorlinks,
+    linkcolor=LinkColor
+}
+
+\input{colors.tex}
+\input{components/command.tex}
 
 \begin{document}
 
@@ -23,7 +43,7 @@
 \tableofcontents
 \newpage
 
-\setlength{\parskip}{0.6em}
+\setlength{\parskip}{0.61em}
 \subfile{content/1.intro}
 \subfile{content/2.analisi-requisiti}
 \subfile{content/3.implementazione-servizio}
